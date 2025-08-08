@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.utils import secure_filename
+import re
+import json
 
 from app.analyzer import analyzer
 
@@ -32,4 +34,14 @@ def analyze_file():
     if "error" in analysis_result:
         return jsonify({"status": "FAILED", "message": analysis_result["error"], "details": analysis_result.get("details")}), 500
     
-    return jsonify({"status": "SUCCESS", "analysis": analysis_result}), 200
+    # return jsonify({"status": "SUCCESS", "data": analysis_result}), 200
+    model_text = analysis_result["response"]
+    try:
+        json_str = re.search(r"\{[\s\S]*\}", model_text).group()
+        data = {"analysis": json.loads(json_str), "raw": False}
+        return jsonify({"status": "SUCCESS", "data": data}), 200
+    except Exception as e:
+        print(f"Error parsing JSON from model response: {e}")
+        data = {"analysis": model_text, "raw": True}
+        return jsonify({"status": "SUCCESS", "data": data}), 200
+    

@@ -38,7 +38,6 @@ class Analyzer():
         for paragraph in doc.paragraphs:
             text += paragraph.text + "\n"
             
-        print(text)
         return text
     
     def analyze_text(self, text):
