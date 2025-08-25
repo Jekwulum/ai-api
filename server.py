@@ -4,7 +4,7 @@ from app.routes import routes
 
 load_dotenv()
 
-port = 5600
+port = 8000
 app = Flask(__name__)
 app.register_blueprint(routes)
 

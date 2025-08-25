@@ -1,0 +1,35 @@
+apiVersion: 2019-12-01
+location: eastus
+name: text-analyzer-group
+properties:
+  containers:
+    - name: tinyllama
+      properties:
+        image: myacr.azurecr.io/tinyllama:latest
+        ports:
+          - port: 11434
+        resources:
+          requests:
+            cpu: 2
+            memoryInGB: 4
+    - name: flask-api
+      properties:
+        image: myacr.azurecr.io/text-analyzer-api:latest
+        ports:
+          - port: 8000
+        environmentVariables:
+          - name: TINYLLAMA_URL
+            value: http://tinyllama:11434/api/generate
+        resources:
+          requests:
+            cpu: 1
+            memoryInGB: 2
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+      - protocol: tcp
+        port: 8000
+  restartPolicy: Always
+tags: {}
+type: Microsoft.ContainerInstance/containerGroups

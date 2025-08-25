@@ -41,6 +41,7 @@ class Analyzer():
         return text
     
     def analyze_text(self, text):
+        print(text)
         prompt = f"""
         You are a professional text analyst.
         Analyze the following text and return:
